@@ -29,9 +29,21 @@ namespace AnvilCloud.KubernetesProbes
 
             foreach(var registration in probeRegistrations)
             {
-                logger.LogInformation("Creating probe '{ProbeName}'...", registration.Name);
+                try
+                {
 
-                probes.Add(await registration.CreateProbeAsync(serviceProvider, cancellationToken));
+                    logger.LogInformation("Creating probe '{ProbeName}'...", registration.Name);
+
+                    var probe = await registration.CreateProbeAsync(serviceProvider, cancellationToken);
+
+                    await probe.StartAsync(cancellationToken);
+
+                    probes.Add(probe);
+                }
+                catch(Exception ex)
+                {
+                    logger.LogCritical(ex, "Failed to create and start probe '{ProbeName}'", registration.Name);
+                }
             }
         }
 
