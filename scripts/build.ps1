@@ -1,0 +1,1 @@
+docker build ../src -t probe-test:1.0

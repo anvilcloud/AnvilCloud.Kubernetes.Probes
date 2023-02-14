@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: probe-test
+spec:
+  containers:
+  - name: probe-test
+    image: probe-test:1.0
+    livenessProbe:
+      tcpSocket:
+        port: 9000
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    # livenessProbe:
+    #   tcpSocket:
+    #     port: 9001
+    #   initialDelaySeconds: 15
+    #   periodSeconds: 20

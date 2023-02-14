@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnvilCloud.KubernetesProbes", "AnvilCloud.KubernetesProbes\AnvilCloud.KubernetesProbes.csproj", "{87FEB64C-199E-4C11-9065-59E81195C9ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProbeTest", "ProbeTest\ProbeTest.csproj", "{AF824F7D-E1B2-4160-A689-F867091E58B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87FEB64C-199E-4C11-9065-59E81195C9ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87FEB64C-199E-4C11-9065-59E81195C9ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87FEB64C-199E-4C11-9065-59E81195C9ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87FEB64C-199E-4C11-9065-59E81195C9ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF824F7D-E1B2-4160-A689-F867091E58B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF824F7D-E1B2-4160-A689-F867091E58B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF824F7D-E1B2-4160-A689-F867091E58B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF824F7D-E1B2-4160-A689-F867091E58B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA2987B7-2AD9-4EDD-8319-9AEB504E19DB}
+	EndGlobalSection
+EndGlobal
