@@ -11,10 +11,17 @@
         IProbeRegistration Registration { get; }
 
         /// <summary>
-        /// Starts the probe.
+        /// Starts the probe listening to probe requests.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task StartAsync(CancellationToken cancellationToken = default);
+        Task EnableAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Stops the probe from listening to probe requests.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task DisableAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -12,3 +12,6 @@ This library allows .NET applications to directly support these probes without n
 # How to build it
 
 # How to test it
+
+# Resources
+- https://stackoverflow.com/a/68069909/232566

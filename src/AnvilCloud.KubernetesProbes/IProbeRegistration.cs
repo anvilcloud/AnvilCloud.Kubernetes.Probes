@@ -6,16 +6,18 @@
     public interface IProbeRegistration
     {
         /// <summary>
-        /// Creates the probe. This will be called once per lifetime of this object.
+        /// The factory that will create the probe at runtime.
         /// </summary>
-        /// <param name="serviceProvider">Passed in to allow dependency injection.</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<IProbe> CreateProbeAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken = default);
+        IProbeFactory Factory { get; }
 
         /// <summary>
         /// Gets the name of the registration.
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Selects which health reports to consider for this probe.
+        /// </summary>
+        Func<IHealthReportEntry, bool> HealthReportFilter { get; }
     }
 }

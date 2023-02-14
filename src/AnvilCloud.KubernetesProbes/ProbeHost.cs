@@ -31,25 +31,22 @@ namespace AnvilCloud.KubernetesProbes
             {
                 try
                 {
-
                     logger.LogInformation("Creating probe '{ProbeName}'...", registration.Name);
 
-                    var probe = await registration.CreateProbeAsync(serviceProvider, cancellationToken);
-
-                    await probe.StartAsync(cancellationToken);
+                    var probe = await registration.Factory.CreateProbeAsync(serviceProvider, registration, cancellationToken);
 
                     probes.Add(probe);
                 }
                 catch(Exception ex)
                 {
-                    logger.LogCritical(ex, "Failed to create and start probe '{ProbeName}'", registration.Name);
+                    logger.LogCritical(ex, "Failed to create probe '{ProbeName}'", registration.Name);
                 }
             }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("Disposing probes...");
+            logger.LogInformation("Disposing {ProbeCount} probes...", probes.Count);
 
             foreach (var probe in probes)
             {
