@@ -1,5 +1,4 @@
 ﻿using AnvilCloud.KubernetesProbes;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,5 +8,7 @@ await Host.CreateDefaultBuilder()
         loggerBuilder.AddConsole();
     })
     .ConfigureServices((hostContext, services) => {
-        services.AddHostedService<ProbeHost>();
+        services.AddTcpProbe("startup", 9000);
+        services.AddTcpProbe("readiness", 9001);
+        services.AddTcpProbe("liveness", 9002);
     }).RunConsoleAsync();

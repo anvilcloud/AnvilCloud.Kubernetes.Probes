@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Net.Sockets;
 
 namespace AnvilCloud.KubernetesProbes.Tcp
@@ -7,25 +8,40 @@ namespace AnvilCloud.KubernetesProbes.Tcp
     {
         private TcpListener server;
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
-        private readonly int port;
+        private readonly ILogger<TcpProbe> logger;
+        private readonly TcpProbeRegistration registration;
         private Task runTask;
 
-        public TcpProbe(int port)
+        public string Name { get; }
+
+        public IProbeRegistration Registration => registration;
+
+        public TcpProbe(
+            ILogger<TcpProbe> logger, 
+            TcpProbeRegistration registration)
         {
-            this.port = port;
+            this.logger = logger;
+            this.registration = registration;
         }
 
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            server.Stop();
+            var serverCopy = server;
 
-            return ValueTask.CompletedTask;
+            if (serverCopy != null)
+            {
+                server.Stop();
+
+                await runTask;
+            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
+            logger.LogInformation("Starting probe '{ProbeName}'", Registration.Name);
+
             //Create the server
-            server = new TcpListener(IPAddress.Any, port);
+            server = new TcpListener(IPAddress.Any, registration.Port);
 
             //Start the server
             server.Start();
@@ -33,6 +49,7 @@ namespace AnvilCloud.KubernetesProbes.Tcp
             //Start it up!
             runTask = RunAsync(cts.Token);
 
+            //We're done for now
             return Task.CompletedTask;
         }
 
@@ -44,49 +61,19 @@ namespace AnvilCloud.KubernetesProbes.Tcp
                 {
                     using (TcpClient client = server.AcceptTcpClient())
                     {
-                        //logger.LogInformation("Accepted a probe request");
+                        logger.LogInformation("Probe '{ProbeName}' accepted a probe request", Registration.Name);
 
                         //Nothing to do
                         client.Close();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //logger.LogError(ex, "An error occurred during a probe attempt.");
+                    logger.LogError(ex, "An error occurred during a probe attempt for '{ProbeName}'.", Registration.Name);
                 }
             }
 
             return Task.CompletedTask;
         }
-
-        //public void Test()
-        //{
-        //    logger.LogInformation("Starting probe...");
-
-        //    server = new TcpListener(System.Net.IPAddress.Any, 9000);
-
-        //    server.Start();
-
-        //    while (!stoppingToken.IsCancellationRequested)
-        //    {
-        //        try
-        //        {
-        //            using (TcpClient client = server.AcceptTcpClient())
-        //            {
-        //                logger.LogInformation("Accepted a probe request");
-
-        //                //Nothing to do
-        //                client.Close();
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            logger.LogError(ex, "An error occurred during a probe attempt.");
-        //        }
-        //    }
-
-        //    logger.LogInformation("Probe complete.");
-
-        //}
     }
 }
