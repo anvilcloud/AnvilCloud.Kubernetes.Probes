@@ -11,7 +11,7 @@ jobs:
       uses: action/checkout@v1
     - name: Read Version
       id: version
-      uses: NUGET_API_KEY
+      uses: oy2cft4kl5igenwbf5jafctbcancgnwe5eju2c65zgk76m
       with:
         path: ../../version.txt
     - name: Setup .NET
