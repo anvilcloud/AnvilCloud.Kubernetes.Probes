@@ -1,13 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>annotations</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>annotations</Nullable>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AnvilCloud.Kubernetes.Probes\AnvilCloud.Kubernetes.Probes.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AnvilCloud.Kubernetes.Probes\AnvilCloud.Kubernetes.Probes.csproj" />
+	</ItemGroup>
 
 </Project>

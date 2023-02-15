@@ -18,7 +18,7 @@ namespace AnvilCloud.Kubernetes.Probes
 
         public async Task PublishAsync(HealthReport report, CancellationToken cancellationToken)
         {
-            logger.LogInformation("HealthReport: {Status}", report.Status);
+            logger.LogTrace("HealthReport: {Status}", report.Status);
 
             await messenger.PublishHealthReportAsync(report, cancellationToken);
         }

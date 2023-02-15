@@ -5,6 +5,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace AnvilCloud.Kubernetes.Probes
 {
+    /// <summary>
+    /// Provides extension methods for adding Kubernetes probes to in an <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ProbeExtensions
     {
         /// <summary>
@@ -13,6 +16,7 @@ namespace AnvilCloud.Kubernetes.Probes
         /// <param name="services"></param>
         /// <param name="name">The name of the probe.</param>
         /// <param name="probeFactory">Specify null to consider all health reports.</param>
+        /// <param name="predicate">Used to filter which <see cref="HealthReportEntry"/> to consider for a given probe.</param>
         /// <returns></returns>
         public static IServiceCollection AddProbe(
             this IServiceCollection services,

@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: action/checkout@v1
+    - name: Read Version
+      id: version
+      uses: NUGET_API_KEY
+      with:
+        path: ../../version.txt
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.14
+    - name: Build with dotnet
+      run: dotnet build src/AnvilCloud.Kubernetes.Probes.sln --configuration Release /p:Version="${{ steps.package.outputs.content }}"
+    - name: pack 
+      run: dotnet pack src/AnvilCloud.Kubernetes.Probes/AnvilCloud.Kubernetes.Probes.csproj --no-build --no-restore /p:Version="${{ steps.package.outputs.content }}"
+    - name: pack 
+      run: dotnet pack src/AnvilCloud.Kubernetes.Probes.Tcp/AnvilCloud.Kubernetes.Probes.Tcp.csproj --no-build --no-restore /p:Version="${{ steps.package.outputs.content }}"
+    - name: Publish nuget
+      run: dotnet nuget push src/**/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+    

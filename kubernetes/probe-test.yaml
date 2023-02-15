@@ -8,18 +8,8 @@ spec:
   containers:
   - name: probe-test
     image: probe-test:1.0
-    startupProbe:
-      tcpSocket:
-        port: 9000
-      initialDelaySeconds: 5
-      periodSeconds: 10
     livenessProbe:
       tcpSocket:
-        port: 9001
-      initialDelaySeconds: 15
-      periodSeconds: 20
-    readinessProbe:
-      tcpSocket:
-        port: 9002
-      initialDelaySeconds: 15
+        port: 9000
+      initialDelaySeconds: 10
       periodSeconds: 20

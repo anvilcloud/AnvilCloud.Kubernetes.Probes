@@ -29,7 +29,7 @@ namespace AnvilCloud.Kubernetes.Probes
 
         internal async Task OnHealthReportAsync(HealthReport report, CancellationToken cancellationToken)
         {
-            logger.LogInformation("ProbeHost received health report.");
+            logger.LogTrace("ProbeHost received health report: {Status}", report.Status);
 
             foreach (var probe in probes)
             {

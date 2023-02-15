@@ -45,9 +45,9 @@ namespace AnvilCloud.Kubernetes.Probes.Tcp
             if (runState != null)
                 return Task.CompletedTask;
 
-            logger.LogInformation("Starting TcpProbe '{ProbeName}' on port {Port}", registration.Name, factory.Port);
+            logger.LogInformation("Enabling TcpProbe '{ProbeName}' on port {Port}", registration.Name, factory.Port);
 
-            runState = new RunState(RunAsync);
+            runState = new RunState(RunAsync, server);
 
             //We're done for now
             return Task.CompletedTask;
@@ -62,9 +62,7 @@ namespace AnvilCloud.Kubernetes.Probes.Tcp
 
             runState = null;
 
-            logger.LogInformation("Stopping TcpProbe '{ProbeName}' on port {Port}", registration.Name, factory.Port);
-
-            server.Stop();
+            logger.LogInformation("Disabling TcpProbe '{ProbeName}' on port {Port}", registration.Name, factory.Port);
 
             await runStateCopy.DisposeAsync();
         }
@@ -82,7 +80,7 @@ namespace AnvilCloud.Kubernetes.Probes.Tcp
                 {
                     using (TcpClient client = server.AcceptTcpClient())
                     {
-                        logger.LogInformation("TcpProbe '{ProbeName}' accepted a probe request on port {Port}", registration.Name, factory.Port);
+                        logger.LogTrace("TcpProbe '{ProbeName}' accepted a probe request on port {Port}", registration.Name, factory.Port);
 
                         //Nothing to do
                         client.Close();
@@ -113,10 +111,12 @@ namespace AnvilCloud.Kubernetes.Probes.Tcp
         {
             private readonly CancellationTokenSource cts = new CancellationTokenSource();
             private readonly Task runTask;
+            private readonly TcpListener server;
 
-            public RunState(Func<CancellationToken, Task> run)
+            public RunState(Func<CancellationToken, Task> run, TcpListener server)
             {
                 runTask = run(cts.Token);
+                this.server = server;
             }
 
             /// <summary>
@@ -127,8 +127,12 @@ namespace AnvilCloud.Kubernetes.Probes.Tcp
             {
                 cts.Cancel();
 
+                server.Stop();
+
                 await runTask
                     .ConfigureAwait(false);
+
+                cts.Dispose();
             }
         }
     }
