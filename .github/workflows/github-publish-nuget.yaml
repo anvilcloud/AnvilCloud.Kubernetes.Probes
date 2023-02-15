@@ -20,9 +20,9 @@ jobs:
         dotnet-version: 6.0.14
     - name: Build with dotnet
       run: dotnet build src/AnvilCloud.Kubernetes.Probes.sln --configuration Release /p:Version="${{ steps.package.outputs.content }}"
-    - name: pack 
+    - name: pack Probes
       run: dotnet pack src/AnvilCloud.Kubernetes.Probes/AnvilCloud.Kubernetes.Probes.csproj --no-build --no-restore /p:Version="${{ steps.package.outputs.content }}"
-    - name: pack 
+    - name: pack Probes.Tcp
       run: dotnet pack src/AnvilCloud.Kubernetes.Probes.Tcp/AnvilCloud.Kubernetes.Probes.Tcp.csproj --no-build --no-restore /p:Version="${{ steps.package.outputs.content }}"
     - name: Publish nuget
       run: dotnet nuget push src/**/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
