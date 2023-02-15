@@ -11,7 +11,7 @@ jobs:
       uses: action/checkout@v1
     - name: Read Version
       id: version
-      uses: oy2cft4kl5igenwbf5jafctbcancgnwe5eju2c65zgk76m
+      uses: juliangruber/read-file-action@v1
       with:
         path: ../../version.txt
     - name: Setup .NET
