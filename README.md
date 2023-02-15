@@ -99,4 +99,5 @@ To delete the test pod:
  kubectl delete -f ./probe-test.yaml
 ```
 # Further Reading
-More information on health checks: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks
+- More information on health checks: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks
+- Kubernetes probes: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
