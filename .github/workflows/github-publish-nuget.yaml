@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: action/checkout@v1
+      uses: action/checkout@v3
     - name: Read Version
       id: version
       uses: juliangruber/read-file-action@v1
