@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AnvilCloud.KubernetesProbes.Tcp\AnvilCloud.KubernetesProbes.Tcp.csproj" />
-    <ProjectReference Include="..\AnvilCloud.KubernetesProbes\AnvilCloud.KubernetesProbes.csproj" />
+    <ProjectReference Include="..\AnvilCloud.Kubernetes.Probes.Tcp\AnvilCloud.Kubernetes.Probes.Tcp.csproj" />
   </ItemGroup>
 
 </Project>

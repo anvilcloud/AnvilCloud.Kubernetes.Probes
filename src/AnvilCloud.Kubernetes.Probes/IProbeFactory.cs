@@ -1,4 +1,4 @@
-﻿namespace AnvilCloud.KubernetesProbes
+﻿namespace AnvilCloud.Kubernetes.Probes
 {
     /// <summary>
     /// Responsible for creating an <see cref="IProbe"/> instance.
@@ -13,8 +13,8 @@
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<IProbe> CreateProbeAsync(
-            IServiceProvider serviceProvider, 
-            IProbeRegistration registration, 
+            IServiceProvider serviceProvider,
+            IProbeRegistration registration,
             CancellationToken cancellationToken = default);
     }
 }

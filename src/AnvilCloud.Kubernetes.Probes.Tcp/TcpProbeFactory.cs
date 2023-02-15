@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AnvilCloud.Kubernetes.Probes.Tcp;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 
-namespace AnvilCloud.KubernetesProbes.Tcp
+//Placed in the "root" namespace to make discovery easier.
+namespace AnvilCloud.Kubernetes.Probes
 {
     /// <summary>
     /// Creates a TcpProbe.
@@ -12,9 +15,10 @@ namespace AnvilCloud.KubernetesProbes.Tcp
         /// Creates an instance of the <see cref="TcpProbeFactory"/> class.
         /// </summary>
         /// <param name="port">The port on which to listen to.</param>
-        public TcpProbeFactory(int port)
+        public TcpProbeFactory(int port, HealthStatus threshold = HealthStatus.Healthy)
         {
             Port = port;
+            Threshold = threshold;
         }
 
         /// <summary>
@@ -22,10 +26,15 @@ namespace AnvilCloud.KubernetesProbes.Tcp
         /// </summary>
         public int Port { get; }
 
+        /// <summary>
+        /// The threshold at which to consider the health status "good".
+        /// </summary>
+        public HealthStatus Threshold { get; }
+
         /// <inheritdoc/>
         public Task<IProbe> CreateProbeAsync(
-            IServiceProvider serviceProvider, 
-            IProbeRegistration registration, 
+            IServiceProvider serviceProvider,
+            IProbeRegistration registration,
             CancellationToken cancellationToken = default)
         {
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
@@ -35,6 +44,6 @@ namespace AnvilCloud.KubernetesProbes.Tcp
             var probe = new TcpProbe(logger, registration, this);
 
             return Task.FromResult<IProbe>(probe);
-        }    
+        }
     }
 }

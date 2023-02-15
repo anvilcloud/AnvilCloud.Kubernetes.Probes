@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace AnvilCloud.KubernetesProbes
+namespace AnvilCloud.Kubernetes.Probes
 {
     /// <summary>
     /// Responsible for hosting <see cref="IProbe"/> implementations at runtime.
@@ -11,23 +12,45 @@ namespace AnvilCloud.KubernetesProbes
         private readonly ILogger<ProbeHost> logger;
         private readonly IServiceProvider serviceProvider;
         private readonly IProbeRegistration[] probeRegistrations;
-        private readonly IList<IProbe> probes = new List<IProbe>();
+        private readonly IList<ProbeOwner> probes = new List<ProbeOwner>();
 
         public ProbeHost(
-            ILogger<ProbeHost> logger, 
+            ILogger<ProbeHost> logger,
             IEnumerable<IProbeRegistration> probeRegistrations,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            HealthReportMessenger messenger)
         {
             this.logger = logger;
             this.serviceProvider = serviceProvider;
             this.probeRegistrations = probeRegistrations.ToArray();
+
+            messenger.SetProbeHost(this);
+        }
+
+        internal async Task OnHealthReportAsync(HealthReport report, CancellationToken cancellationToken)
+        {
+            logger.LogInformation("ProbeHost received health report.");
+
+            foreach (var probe in probes)
+            {
+                try
+                {
+                    var healthStatusForProbe = report.GetEffectiveHealthStatus(probe.Registration.Predicate);
+
+                    await probe.Probe.SetHealthStatusAsync(healthStatusForProbe, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Problem sending health report status to probe '{ProbeName}'", probe.Registration.Name);
+                }
+            }
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("Creating {ProbeCount} probes...", probeRegistrations.Length);
 
-            foreach(var registration in probeRegistrations)
+            foreach (var registration in probeRegistrations)
             {
                 try
                 {
@@ -35,9 +58,11 @@ namespace AnvilCloud.KubernetesProbes
 
                     var probe = await registration.Factory.CreateProbeAsync(serviceProvider, registration, cancellationToken);
 
-                    probes.Add(probe);
+                    var probeOwner = new ProbeOwner(registration, probe);
+
+                    probes.Add(probeOwner);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     logger.LogCritical(ex, "Failed to create probe '{ProbeName}'", registration.Name);
                 }

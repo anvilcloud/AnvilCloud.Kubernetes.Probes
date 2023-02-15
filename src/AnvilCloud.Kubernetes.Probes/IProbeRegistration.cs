@@ -1,4 +1,6 @@
-﻿namespace AnvilCloud.KubernetesProbes
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+
+namespace AnvilCloud.Kubernetes.Probes
 {
     /// <summary>
     /// Registration information for a probe.
@@ -16,8 +18,8 @@
         string Name { get; }
 
         /// <summary>
-        /// Selects which health reports to consider for this probe.
+        /// Selects which health report items to consider for this probe.
         /// </summary>
-        Func<IHealthReportEntry, bool> HealthReportFilter { get; }
+        Func<HealthReportEntry, bool> Predicate { get; }
     }
 }
